@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace IndexedFiles
+﻿namespace IndexedFiles
 {
     internal class Program
     {
