@@ -10,5 +10,6 @@ namespace IndexedFiles.DataBase
         public void Insert(string item);
         public void Remove(string item);
         public void Replace(string item, int id, IBlock block);
+        public void SetIndexes(List<int> indexes);
     }
 }

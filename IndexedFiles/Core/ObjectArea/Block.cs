@@ -4,8 +4,8 @@ namespace IndexedFiles.Core.ObjectArea
 {
     internal sealed class Block : IBlock
     {
-        public static int Count = 10;
-        public static int Capacity = 100;
+        public static int BlocksCount = 10;
+        public static int Capacity = 10;
         public int BlockID { get; set; }
 
         public List<IKey> Keys { get; }

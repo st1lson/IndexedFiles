@@ -17,6 +17,7 @@ namespace IndexedFiles.FileManager
             IDataBaseHandler dataBase = new DataBaseHandler();
 
             using StreamReader reader = new(_objectFile);
+            List<int> indexes = new();
             IBlock block = null;
             int blockId = 0;
             while (!reader.EndOfStream)
@@ -29,27 +30,50 @@ namespace IndexedFiles.FileManager
                         dataBase.Blocks.Add(block);
                     }
 
+                    line = reader.ReadLine();
+                    if (!Int32.TryParse(line, out blockId))
+                    {
+                        throw new Exception("End of file");
+                    }
+
                     block = new Block()
                     {
-                        BlockID = blockId++
+                        BlockID = blockId
                     };
+
+                    line = reader.ReadLine();
                 }
 
-                string[] splitedLine = line.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                if (!Int32.TryParse(splitedLine[0], out int id))
+                if (line.Equals("Empty key"))
                 {
-                    throw new FormatException();
+                    IKey emptyKey = new EmptyKey();
+                    block.Keys.Add(emptyKey);
+                    continue;
                 }
-
-                IKey key = new Key()
+                else
                 {
-                    Id = id,
-                    Data = splitedLine[1]
-                };
+                    string[] splitedLine = line.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    if (!Int32.TryParse(splitedLine[0], out int id))
+                    {
+                        throw new FormatException();
+                    }
 
-                block.Keys.Add(key);
+                    indexes.Add(id);
+                    IKey key = new Key()
+                    {
+                        Id = id,
+                        Data = splitedLine[1]
+                    };
+
+                    block.Keys.Add(key);
+                }
             }
 
+            Block.Capacity = Int32.Parse(ReadIndexFile()[0].Split(',')[0]);
+            Block.BlocksCount = dataBase.Blocks.Count;
+            Console.WriteLine(Block.Capacity);
+            dataBase.Blocks.Add(block);
+            dataBase.SetIndexes(indexes);
             return dataBase;
         }
 
@@ -80,6 +104,7 @@ namespace IndexedFiles.FileManager
             foreach (IBlock block in blocks)
             {
                 writer.WriteLine();
+                writer.WriteLine(block.BlockID);
                 foreach (IKey key in block.Keys)
                 {
                     writer.WriteLine(key);
