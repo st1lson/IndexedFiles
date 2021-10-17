@@ -1,4 +1,4 @@
-﻿using IndexedFiles.Core;
+﻿using IndexedFiles.Core.ObjectArea;
 using System.Collections.Generic;
 
 namespace IndexedFiles.DataBase
@@ -7,8 +7,8 @@ namespace IndexedFiles.DataBase
     {
         public List<IBlock> Blocks { get; }
 
-        public void Insert(IKey key);
-        public void Remove(int id);
-        public void Replace(int index, Block block);
+        public void Insert(string item);
+        public void Remove(string item);
+        public void Replace(string item, int id, IBlock block);
     }
 }

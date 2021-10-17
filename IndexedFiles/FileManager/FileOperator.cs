@@ -1,67 +1,88 @@
-﻿using IndexedFiles.Core;
+﻿using IndexedFiles.Core.ObjectArea;
 using IndexedFiles.DataBase;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace IndexedFiles.FileManager
 {
     internal static class FileOperator
     {
-        private const string _path = "../../../DataFiles/default.txt";
+        private const string _indexFile = "../../../DataFiles/index.txt";
+        private const string _objectFile = "../../../DataFiles/default.txt";
 
-        public static IDataBaseHandler ReadFile()
+        public static IDataBaseHandler DeserializeDataBase()
         {
             IDataBaseHandler dataBase = new DataBaseHandler();
-            using (StreamReader reader = new (_path))
-            {
-                Block block = new ();
-                while (!reader.EndOfStream)
-                {
-                    string line = reader.ReadLine();
-                    if (string.IsNullOrEmpty(line))
-                    {
-                        if (block.Keys.Count != 0)
-                        {
-                            dataBase.Blocks.Add(block);
-                            block = new Block();
-                        }
 
-                        line = reader.ReadLine();
-                        block.BlockID = Int32.Parse(line);
-                        line = reader.ReadLine();
-                        if (string.IsNullOrEmpty(line))
-                        {
-                            break;
-                        }
+            using StreamReader reader = new(_objectFile);
+            IBlock block = null;
+            int blockId = 0;
+            while (!reader.EndOfStream)
+            {
+                string line = reader.ReadLine();
+                if (string.IsNullOrEmpty(line))
+                {
+                    if (block is not null)
+                    {
+                        dataBase.Blocks.Add(block);
                     }
 
-                    string[] value = line.Split(",");
-                    (int id, string data) = (Int32.Parse(value[0]), value[1]);
-                    block.Keys.Add(new Key()
+                    block = new Block()
                     {
-                        Id = id,
-                        Data = data
-                    });
+                        BlockID = blockId++
+                    };
                 }
 
-                dataBase.Blocks.Add(block);
+                string[] splitedLine = line.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                if (!Int32.TryParse(splitedLine[0], out int id))
+                {
+                    throw new FormatException();
+                }
+
+                IKey key = new Key()
+                {
+                    Id = id,
+                    Data = splitedLine[1]
+                };
+
+                block.Keys.Add(key);
             }
 
             return dataBase;
         }
 
-        public static void WriteFile(IDataBaseHandler dataBase)
+        public static List<string> ReadIndexFile()
         {
-            using (StreamWriter writer = new(_path, false))
+            List<string> data = new();
+            using StreamReader reader = new(_indexFile);
+            while(!reader.EndOfStream)
             {
-                foreach (Block block in dataBase.Blocks)
+                data.Add(reader.ReadLine());
+            }
+
+            return data;
+        }
+
+        public static void WriteIndexFile(List<IBlock> blocks)
+        {
+            using StreamWriter writer = new(_indexFile, false, Encoding.Default);
+            foreach (IBlock block in blocks)
+            {
+                writer.WriteLine($"{Block.Capacity * block.BlockID + Block.Capacity}, {block.BlockID}");
+            }
+        }
+
+        public static void WriteObjectFile(List<IBlock> blocks)
+        {
+            using StreamWriter writer = new(_objectFile, false, Encoding.Default);
+            foreach (IBlock block in blocks)
+            {
+                writer.WriteLine();
+                foreach (IKey key in block.Keys)
                 {
-                    writer.WriteLine();
-                    writer.WriteLine($"{block.BlockID}");
-                    foreach (Key key in block.Keys)
-                    {
-                        writer.WriteLine(key);
-                    }
+                    writer.WriteLine(key);
                 }
             }
         }

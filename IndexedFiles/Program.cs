@@ -1,4 +1,6 @@
-﻿namespace IndexedFiles
+﻿using IndexedFiles.FileManager;
+
+namespace IndexedFiles
 {
     internal class Program
     {

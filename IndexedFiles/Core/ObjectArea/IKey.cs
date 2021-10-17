@@ -1,4 +1,4 @@
-﻿namespace IndexedFiles.Core
+﻿namespace IndexedFiles.Core.ObjectArea
 {
     internal interface IKey
     {
