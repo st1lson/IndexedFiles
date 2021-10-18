@@ -1,4 +1,5 @@
 ﻿using IndexedFiles.Core.ObjectArea;
+using IndexedFiles.Enums;
 using IndexedFiles.FileManager;
 using System;
 using System.Collections.Generic;
@@ -104,9 +105,119 @@ namespace IndexedFiles.DataBase
             Replace(key, block);
         }
 
-        public IKey Search(int index)
+        public IKey Search(int id)
         {
-            return new Key();
+            try
+            {
+                int blockId = id / Block.Capacity;
+                int k = (int)Math.Floor(Math.Log2(Blocks[blockId].KeysCount));
+                int i = (int)Math.Pow(2, k) - 1;
+
+                if (id < Blocks[blockId].Keys[i].Id)
+                {
+                    return SharrSearch(id, blockId, k, i, SharrMethod.FirstMethod);
+                }
+                else if (id > Blocks[blockId].Keys[i].Id)
+                {
+                    return SharrSearch(id, blockId, k, i, SharrMethod.SecondMethod);
+                }
+                else
+                {
+                    return Blocks[blockId].Keys[i];
+                }
+            }
+            catch (Exception)
+            {
+                throw new NullReferenceException();
+            }
+        }
+
+        private IKey SharrSearch(int id, int blockId, int k, int i, SharrMethod method)
+        {
+            if (method is SharrMethod.FirstMethod)
+            {
+                int sequence = (int)Math.Pow(2, k);
+
+                while (true)
+                {
+                    if (i > Blocks[blockId].KeysCount)
+                    {
+                        i -= (sequence / 2 + 1);
+                        sequence /= 2;
+                        continue;
+                    }
+                    else if (i < 0)
+                    {
+                        i += (sequence / 2 + 1);
+                        sequence /= 2;
+                        continue;
+                    }
+
+                    if (id > Blocks[blockId].Keys[i].Id)
+                    {
+                        i += (sequence / 2 + 1);
+                        sequence /= 2;
+                    }
+                    else if (id < Blocks[blockId].Keys[i].Id)
+                    {
+                        i -= (sequence / 2 + 1);
+                        sequence /= 2;
+                    }
+                    else
+                    {
+                        if (i > Blocks[blockId].KeysCount || i < 0)
+                        {
+                            throw new IndexOutOfRangeException();
+                        }
+
+                        return Blocks[blockId].Keys[i];
+                    }
+                }
+            }
+            else
+            {
+                int I = (int)Math.Floor(Math.Log2(blockId - (int)Math.Pow(2, k) + 1));
+                i = Blocks[blockId].KeysCount + 1 - (int)Math.Pow(2, I);
+                int sequence = (int)Math.Pow(2, I);
+
+                while (true)
+                {
+                    if (i > Blocks[blockId].KeysCount)
+                    {
+                        i -= (sequence / 2 + 1);
+                        sequence /= 2;
+                        continue;
+                    }
+                    else if (i < 0)
+                    {
+                        i += (sequence / 2 + 1);
+                        sequence /= 2;
+                        continue;
+                    }
+
+                    if (id > Blocks[blockId].Keys[i].Id)
+                    {
+                        i += (sequence / 2 + 1);
+                        sequence /= 2;
+                    }
+                    else if (id < Blocks[blockId].Keys[i].Id)
+                    {
+                        i -= (sequence / 2 + 1);
+                        sequence /= 2;
+                    }
+                    else
+                    {
+                        if (i > Blocks[blockId].KeysCount || i < 0)
+                        {
+                            throw new IndexOutOfRangeException();
+                        }
+
+                        return Blocks[blockId].Keys[i];
+                    }
+                }
+            }
+
+            return default;
         }
 
         public void SetIndexes(List<int> indexes) => _indexes = indexes;

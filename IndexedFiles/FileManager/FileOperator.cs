@@ -72,7 +72,6 @@ namespace IndexedFiles.FileManager
 
             Block.Capacity = Int32.Parse(ReadIndexFile()[0].Split(',')[0]);
             Block.BlocksCount = dataBase.Blocks.Count;
-            Console.WriteLine(Block.Capacity);
             dataBase.Blocks.Add(block);
             dataBase.SetIndexes(indexes);
             return dataBase;

@@ -11,11 +11,15 @@ namespace IndexedFiles
         static void Main(string[] args)
         {
             IDataBaseHandler dataBaseHandler = FileOperator.DeserializeDataBase();
-            for (int i = 0; i < 1000; i++)
+            /*for (int i = 0; i < 1200; i++)
             {
                 dataBaseHandler.Insert(RandomString(5));
-            }
+            }*/
 
+            //dataBaseHandler.Remove(1);
+            //dataBaseHandler.Insert("Hello world", 1);
+
+            Console.WriteLine(dataBaseHandler.Search(2399));
             FileOperator.WriteObjectFile(dataBaseHandler.Blocks);
         }
 
