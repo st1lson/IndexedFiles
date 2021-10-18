@@ -7,7 +7,7 @@ namespace IndexedFiles.DataBase
     {
         public List<IBlock> Blocks { get; }
 
-        public void Insert(string item);
+        public void Insert(string item, int id = 0);
         public void Remove(string item);
         public void Replace(string item, int id, IBlock block);
         public void SetIndexes(List<int> indexes);

@@ -64,6 +64,7 @@ namespace IndexedFiles.FileManager
                         Id = id,
                         Data = splitedLine[1]
                     };
+                    block.KeysCount++;
 
                     block.Keys.Add(key);
                 }

@@ -5,8 +5,10 @@ namespace IndexedFiles.Core.ObjectArea
     internal interface IBlock
     {
         public int BlockID { get; }
-        public List<IKey> Keys { get; }
+        public int KeysCount { get; set; }
+        public List<IKey> Keys { get; set; }
 
-        public void Rebuild();
+        public void RemoveEmptyKey();
+        public void Rebuild(ref List<IKey> keys);
     }
 }
