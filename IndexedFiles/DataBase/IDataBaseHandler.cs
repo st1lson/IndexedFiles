@@ -9,7 +9,7 @@ namespace IndexedFiles.DataBase
 
         public void Insert(string item, int id = 0);
         public void Remove(int id);
-        public void Replace(string item, int id, IBlock block);
+        public void Replace(int id, string item);
         public IKey Search(int index);
         public void SetIndexes(List<int> indexes);
     }

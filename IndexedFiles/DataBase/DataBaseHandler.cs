@@ -73,15 +73,7 @@ namespace IndexedFiles.DataBase
         public void Remove(int id)
         {
             int blockId = id / Block.Capacity;
-            IKey key = null;
-            foreach (IKey item in Blocks[blockId].Keys)
-            {
-                if (item.Id == id)
-                {
-                    key = item;
-                    break;
-                }
-            }
+            IKey key = Search(id);
 
             if (key is null)
             {
@@ -94,7 +86,7 @@ namespace IndexedFiles.DataBase
             Blocks[blockId].KeysCount--;
         }
 
-        public void Replace(string item, int id, IBlock block)
+        public void Replace(int id, string item)
         {
             IKey key = new Key()
             {
@@ -102,7 +94,7 @@ namespace IndexedFiles.DataBase
                 Data = item
             };
 
-            Replace(key, block);
+            Replace(key);
         }
 
         public IKey Search(int id)
@@ -216,22 +208,16 @@ namespace IndexedFiles.DataBase
                     }
                 }
             }
-
-            return default;
         }
 
         public void SetIndexes(List<int> indexes) => _indexes = indexes;
 
-        private void Replace(IKey key, IBlock block)
+        private void Replace(IKey key)
         {
-            if (!Blocks[block.BlockID].Keys.Contains(key))
-            {
-                throw new IndexOutOfRangeException();
-            }
-
-            IKey currentKey = Blocks[block.BlockID].Keys[key.Id];
-            Blocks[block.BlockID].Keys.Remove(currentKey);
-            Blocks[block.BlockID].Keys.Add(key);
+            IKey currentKey = Search(key.Id);
+            Remove(currentKey.Id);
+            _indexes.Remove(currentKey.Id);
+            Insert(key.Data, key.Id);
         }
 
         private bool IsNeedToRebuild()

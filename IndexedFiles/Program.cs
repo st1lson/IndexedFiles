@@ -16,10 +16,6 @@ namespace IndexedFiles
                 dataBaseHandler.Insert(RandomString(5));
             }*/
 
-            //dataBaseHandler.Remove(1);
-            //dataBaseHandler.Insert("Hello world", 1);
-
-            Console.WriteLine(dataBaseHandler.Search(2399));
             FileOperator.WriteObjectFile(dataBaseHandler.Blocks);
         }
 
