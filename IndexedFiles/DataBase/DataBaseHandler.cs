@@ -38,7 +38,7 @@ namespace IndexedFiles.DataBase
             Blocks[blockId].Keys = Blocks[blockId].Keys.OrderBy(key => key.Id).ToList();
             Blocks[blockId].KeysCount++;
 
-            if ((int)Math.Ceiling((double)Blocks[blockId].KeysCount / Block.Capacity * 100) >= 90)
+            if (IsNeedToRebuild())
             {
                 List<IKey> keys = new();
                 _indexes.Clear();
@@ -104,13 +104,36 @@ namespace IndexedFiles.DataBase
             Replace(key, block);
         }
 
+        public IKey Search(int index)
+        {
+            return new Key();
+        }
+
         public void SetIndexes(List<int> indexes) => _indexes = indexes;
 
         private void Replace(IKey key, IBlock block)
         {
+            if (!Blocks[block.BlockID].Keys.Contains(key))
+            {
+                throw new IndexOutOfRangeException();
+            }
+
             IKey currentKey = Blocks[block.BlockID].Keys[key.Id];
             Blocks[block.BlockID].Keys.Remove(currentKey);
             Blocks[block.BlockID].Keys.Add(key);
+        }
+
+        private bool IsNeedToRebuild()
+        {
+            foreach (IBlock block in Blocks)
+            {
+                if ((int)Math.Ceiling((double)block.KeysCount / Block.Capacity * 100) < 80)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
