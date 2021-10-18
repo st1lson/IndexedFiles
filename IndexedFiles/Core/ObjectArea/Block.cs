@@ -33,19 +33,6 @@ namespace IndexedFiles.Core.ObjectArea
         {
             Keys.Clear();
             KeysCount = 0;
-            foreach (IKey key in keys)
-            {
-                if (key.Id >= BlockID * Block.Capacity && key.Id < BlockID * Block.Capacity + Capacity)
-                {
-                    Keys.Add(key);
-                    KeysCount++;
-                }
-            }
-
-            for (int i = 0; i < Keys.Count; i++)
-            {
-                keys.Remove(Keys[i]);
-            }
 
             while (Keys.Count < Capacity)
             {
