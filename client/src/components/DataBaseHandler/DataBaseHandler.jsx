@@ -82,11 +82,33 @@ class DataBaseHandler extends Component {
             });
     }
 
+    handleSearch = (event) => {
+        const { id } = this.state;
+
+        if (!id) {
+            alert("Id field can not be empty");
+            return;
+        }
+
+        axios.
+        get(`indexedfiles/${id}`).
+        then(
+            response => {
+                alert(
+                    `Element "${response.data.data}" found with id "${id}"`,
+                );
+            }).
+        catch(
+            error => {
+                alert(`Error with code ${error.status}`);
+            });
+    }
+
     componentDidMount() {
-        axios.get('indexedfiles').then(res => {
+        axios.get('indexedfiles').then(response => {
             this.setState({
-                objectArea: res.data.objectArea,
-                indexArea: res.data.indexArea,
+                objectArea: response.data.objectArea,
+                indexArea: response.data.indexArea,
             });
         });
     }
@@ -123,6 +145,12 @@ class DataBaseHandler extends Component {
                             type="Remove element"
                             onClick={this.handleRemove}>
                             Remove element
+                        </Button>
+                        <Button
+                            name="Search element"
+                            type="Search element"
+                            onClick={this.handleSearch}>
+                            Search element
                         </Button>
                     </div>
                     <div className={Style.TextAreaWrapper}>

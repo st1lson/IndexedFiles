@@ -2,6 +2,7 @@
 using IndexedFiles.DataBase;
 using IndexedFiles.FileManager;
 using IndexedFilesAPI.Models;
+using IndexedFiles.Core.ObjectArea;
 
 namespace IndexedFilesAPI.Controllers
 {
@@ -23,10 +24,21 @@ namespace IndexedFilesAPI.Controllers
             });
         }
 
-        [HttpPost]
-        public IActionResult Post(Key key)
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
         {
-            _dataBase.Insert(key.Data);
+            IKey key = _dataBase.Search(id);
+
+            return Ok(new
+            {
+                data = key.Data
+            });
+        }
+
+        [HttpPost]
+        public IActionResult Post(DataBaseRequest request)
+        {
+            _dataBase.Insert(request.Data);
 
             return Ok(new
             {

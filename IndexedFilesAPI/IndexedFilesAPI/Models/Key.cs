@@ -1,6 +1,6 @@
 ﻿namespace IndexedFilesAPI.Models
 {
-    public class Key
+    public class DataBaseRequest
     {
         public int Id { get; set; }
         public string Data { get; set; }
