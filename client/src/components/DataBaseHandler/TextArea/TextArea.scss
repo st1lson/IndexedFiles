@@ -1,0 +1,21 @@
+.Wrapper {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+  label {
+    width: 40%;
+    text-align: left;
+  }
+  textarea {
+    white-space: pre-line;
+    font-size: 1.1em;
+    width: 60%;
+    overflow: hidden;
+    min-height: 5rem;
+    max-height: 5rem;
+    border: 5px solid black;
+    border-radius: 0.5rem;
+    background-color: white;
+  }
+}

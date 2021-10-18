@@ -7,10 +7,10 @@ using System.Text;
 
 namespace IndexedFiles.FileManager
 {
-    internal static class FileOperator
+    public static class FileOperator
     {
-        private const string _indexFile = "../../../DataFiles/index.txt";
-        private const string _objectFile = "../../../DataFiles/default.txt";
+        private const string _indexFile = "DataFiles/index.txt";
+        private const string _objectFile = "DataFiles/default.txt";
 
         public static IDataBaseHandler DeserializeDataBase()
         {
@@ -82,6 +82,18 @@ namespace IndexedFiles.FileManager
             List<string> data = new();
             using StreamReader reader = new(_indexFile);
             while(!reader.EndOfStream)
+            {
+                data.Add(reader.ReadLine());
+            }
+
+            return data;
+        }
+
+        public static List<string> ReadObjectFIle()
+        {
+            List<string> data = new();
+            using StreamReader reader = new(_objectFile);
+            while (!reader.EndOfStream)
             {
                 data.Add(reader.ReadLine());
             }

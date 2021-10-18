@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace IndexedFiles.DataBase
 {
-    internal interface IDataBaseHandler
+    public interface IDataBaseHandler
     {
         public List<IBlock> Blocks { get; }
 
@@ -12,5 +12,7 @@ namespace IndexedFiles.DataBase
         public void Replace(int id, string item);
         public IKey Search(int index);
         public void SetIndexes(List<int> indexes);
+        public List<string> GetIndexArea();
+        public List<string> GetObjectArea();
     }
 }

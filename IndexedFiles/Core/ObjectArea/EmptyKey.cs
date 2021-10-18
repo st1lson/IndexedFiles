@@ -2,7 +2,7 @@
 
 namespace IndexedFiles.Core.ObjectArea
 {
-    internal class EmptyKey : IKey
+    public class EmptyKey : IKey
     {
         public int Id { get; set; }
         public string Data { get; set; }

@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace IndexedFiles.DataBase
 {
-    internal class DataBaseHandler : IDataBaseHandler
+    public class DataBaseHandler : IDataBaseHandler
     {
         public List<IBlock> Blocks { get; }
         private List<int> _indexes;
@@ -68,6 +68,8 @@ namespace IndexedFiles.DataBase
 
                 FileOperator.WriteIndexFile(Blocks);
             }
+
+            FileOperator.WriteObjectFile(Blocks);
         }
 
         public void Remove(int id)
@@ -84,6 +86,7 @@ namespace IndexedFiles.DataBase
             Blocks[blockId].Keys.Add(new EmptyKey());
             Blocks[blockId].Keys = Blocks[blockId].Keys.OrderBy(key => key.Id).ToList();
             Blocks[blockId].KeysCount--;
+            FileOperator.WriteObjectFile(Blocks);
         }
 
         public void Replace(int id, string item)
@@ -232,5 +235,9 @@ namespace IndexedFiles.DataBase
 
             return true;
         }
+
+        public List<string> GetIndexArea() => FileOperator.ReadIndexFile();
+
+        public List<string> GetObjectArea() => FileOperator.ReadObjectFIle();
     }
 }

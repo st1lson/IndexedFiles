@@ -2,7 +2,7 @@
 
 namespace IndexedFiles.Core.ObjectArea
 {
-    internal interface IBlock
+    public interface IBlock
     {
         public int BlockID { get; }
         public int KeysCount { get; set; }
