@@ -27,7 +27,15 @@ namespace IndexedFilesAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            IKey key = _dataBase.Search(id);
+            IKey key;
+            try
+            {
+                key = _dataBase.Search(id);
+            }
+            catch (System.Exception)
+            {
+                return NotFound();
+            }
 
             return Ok(new
             {

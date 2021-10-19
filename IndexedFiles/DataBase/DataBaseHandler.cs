@@ -129,6 +129,7 @@ namespace IndexedFiles.DataBase
 
         private IKey SharrSearch(int id, int blockId, int k, int i, SharrMethod method)
         {
+            int counter = 0;
             if (method is SharrMethod.FirstMethod)
             {
                 int sequence = (int)Math.Pow(2, k);
@@ -139,23 +140,27 @@ namespace IndexedFiles.DataBase
                     {
                         i -= (sequence / 2 + 1);
                         sequence /= 2;
+                        counter++;
                         continue;
                     }
                     else if (i < 0)
                     {
                         i += (sequence / 2 + 1);
                         sequence /= 2;
+                        counter++;
                         continue;
                     }
 
                     if (id > Blocks[blockId].Keys[i].Id)
                     {
                         i += (sequence / 2 + 1);
+                        counter++;
                         sequence /= 2;
                     }
                     else if (id < Blocks[blockId].Keys[i].Id)
                     {
                         i -= (sequence / 2 + 1);
+                        counter++;
                         sequence /= 2;
                     }
                     else
@@ -165,6 +170,7 @@ namespace IndexedFiles.DataBase
                             throw new IndexOutOfRangeException();
                         }
 
+                        Console.WriteLine(counter);
                         return Blocks[blockId].Keys[i];
                     }
                 }
@@ -181,23 +187,27 @@ namespace IndexedFiles.DataBase
                     {
                         i -= (sequence / 2 + 1);
                         sequence /= 2;
+                        counter++;
                         continue;
                     }
                     else if (i < 0)
                     {
                         i += (sequence / 2 + 1);
                         sequence /= 2;
+                        counter++;
                         continue;
                     }
 
                     if (id > Blocks[blockId].Keys[i].Id)
                     {
                         i += (sequence / 2 + 1);
+                        counter++;
                         sequence /= 2;
                     }
                     else if (id < Blocks[blockId].Keys[i].Id)
                     {
                         i -= (sequence / 2 + 1);
+                        counter++;
                         sequence /= 2;
                     }
                     else
@@ -207,6 +217,7 @@ namespace IndexedFiles.DataBase
                             throw new IndexOutOfRangeException();
                         }
 
+                        Console.WriteLine(counter);
                         return Blocks[blockId].Keys[i];
                     }
                 }
